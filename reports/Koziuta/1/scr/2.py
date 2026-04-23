@@ -1,15 +1,15 @@
 def addBinary(a: str, b: str) -> str:
-    # Преобразуем двоичные строки в целые числа (из двоичной системы в десятичную)
+    # Convert binary strings to integers
     num1 = int(a, 2)
     num2 = int(b, 2)
-    
-    # Складываем числа
+
+    # Add the numbers
     sum_num = num1 + num2
-    
-    # Преобразуем обратно в двоичную строку и убираем префикс '0b'
+
+    # Convert back to binary string and remove '0b' prefix
     return bin(sum_num)[2:]
 
-# Тест
-a = "11"
-b = "1"
-print(addBinary(a, b))  # "100"
+# Test
+a_global = "11"
+b_global = "1"
+print(addBinary(a_global, b_global))  # "100"
