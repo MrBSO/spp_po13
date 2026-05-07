@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-# ---------- Продукты ----------
 class Product(ABC):
     @abstractmethod
     def get_name(self) -> str:
@@ -44,19 +43,16 @@ class Juice(Product):
     def get_price(self) -> float:
         return self._price
 
-# ---------- Создатель (Торговый автомат) ----------
 class VendingMachine(ABC):
     @abstractmethod
     def create_product(self, product_type: str, **kwargs) -> Product:
         """Фабричный метод для создания товара"""
-        pass
 
     def dispense_product(self, product_type: str, **kwargs) -> None:
         """Метод для выдачи товара"""
         product = self.create_product(product_type, **kwargs)
         print(f"Автомат выдаёт: {product.get_name()} за {product.get_price()} руб.")
 
-# Конкретный создатель
 class SnackVendingMachine(VendingMachine):
     def create_product(self, product_type: str, **kwargs) -> Product:
         if product_type == "chocolate":
@@ -67,7 +63,6 @@ class SnackVendingMachine(VendingMachine):
             return Juice(kwargs.get("fruit", "Unknown"), kwargs.get("volume", 0), kwargs.get("price", 0.0))
         raise ValueError(f"Неизвестный тип товара: {product_type}")
 
-# ---------- Пример использования ----------
 if __name__ == "__main__":
     machine = SnackVendingMachine()
     machine.dispense_product("chocolate", name="Mars", price=75.0)
