@@ -1,211 +1,173 @@
 """Lab 3, task 2, variant 7.
 
-Structural pattern example: Bridge.
-Cars and remote controls are developed independently.
+Структурный паттерн: Bridge.
+Автомобили и пульты дистанционного управления
+развиваются независимо друг от друга.
 """
-
-from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
 
 class Car(ABC):
-    """Abstract car."""
+    """Абстрактный автомобиль."""
 
     def __init__(self, model: str) -> None:
-        """Initialize a car."""
         if not model.strip():
-            raise ValueError("Model cannot be empty.")
-
+            raise ValueError("Модель не может быть пустой.")
         self.model = model
-        self.alarm_enabled = False
-        self.doors_locked = False
-        self.engine_started = False
+        self.alarm = False
+        self.locked = False
+        self.engine = False
 
     @abstractmethod
     def brand(self) -> str:
-        """Return car brand."""
+        """Вернуть марку автомобиля."""
 
     def activate_alarm(self) -> None:
-        """Activate alarm."""
-        self.alarm_enabled = True
-        print(f"{self.brand()} {self.model}: alarm enabled")
+        """Включить сигнализацию."""
+        self.alarm = True
+        print(f"{self.brand()} {self.model}: сигнализация включена.")
 
     def deactivate_alarm(self) -> None:
-        """Deactivate alarm."""
-        self.alarm_enabled = False
-        print(f"{self.brand()} {self.model}: alarm disabled")
+        """Выключить сигнализацию."""
+        self.alarm = False
+        print(f"{self.brand()} {self.model}: сигнализация выключена.")
 
     def lock_doors(self) -> None:
-        """Lock doors."""
-        self.doors_locked = True
-        print(f"{self.brand()} {self.model}: doors locked")
+        """Заблокировать двери."""
+        self.locked = True
+        print(f"{self.brand()} {self.model}: двери заблокированы.")
 
     def unlock_doors(self) -> None:
-        """Unlock doors."""
-        self.doors_locked = False
-        print(f"{self.brand()} {self.model}: doors unlocked")
+        """Разблокировать двери."""
+        self.locked = False
+        print(f"{self.brand()} {self.model}: двери разблокированы.")
 
     def start_engine(self) -> None:
-        """Start engine."""
-        self.engine_started = True
-        print(f"{self.brand()} {self.model}: engine started")
+        """Запустить двигатель."""
+        self.engine = True
+        print(f"{self.brand()} {self.model}: двигатель запущен.")
 
     def stop_engine(self) -> None:
-        """Stop engine."""
-        self.engine_started = False
-        print(f"{self.brand()} {self.model}: engine stopped")
-
-    def show_status(self) -> None:
-        """Show current car status."""
-        print(
-            f"{self.brand()} {self.model}: "
-            f"alarm={self.alarm_enabled}, "
-            f"locked={self.doors_locked}, "
-            f"engine={self.engine_started}"
-        )
+        """Остановить двигатель."""
+        self.engine = False
+        print(f"{self.brand()} {self.model}: двигатель остановлен.")
 
 
 # pylint: disable=too-few-public-methods
-class BMWCar(Car):
-    """BMW car."""
+class BMW(Car):
+    """Автомобиль BMW."""
 
     def brand(self) -> str:
-        """Return brand."""
         return "BMW"
 
 
 # pylint: disable=too-few-public-methods
-class ToyotaCar(Car):
-    """Toyota car."""
+class Toyota(Car):
+    """Автомобиль Toyota."""
 
     def brand(self) -> str:
-        """Return brand."""
         return "Toyota"
 
 
 # pylint: disable=too-few-public-methods
-class AudiCar(Car):
-    """Audi car."""
+class Audi(Car):
+    """Автомобиль Audi."""
 
     def brand(self) -> str:
-        """Return brand."""
         return "Audi"
 
 
+# pylint: disable=too-few-public-methods
 class RemoteControl(ABC):
-    """Abstract remote control."""
+    """Абстрактный пульт управления."""
 
     def __init__(self, car: Car) -> None:
-        """Bind remote control to a car."""
         self.car = car
 
     @abstractmethod
     def toggle_alarm(self) -> None:
-        """Toggle alarm mode."""
+        """Переключить сигнализацию."""
 
     @abstractmethod
     def toggle_doors(self) -> None:
-        """Toggle doors state."""
+        """Переключить двери."""
 
     @abstractmethod
-    def remote_engine(self) -> None:
-        """Start or stop engine remotely."""
+    def toggle_engine(self) -> None:
+        """Переключить двигатель."""
 
 
 class StandardRemote(RemoteControl):
-    """Basic remote control."""
+    """Обычный пульт."""
 
     def toggle_alarm(self) -> None:
-        """Toggle alarm mode."""
-        if self.car.alarm_enabled:
+        if self.car.alarm:
             self.car.deactivate_alarm()
         else:
             self.car.activate_alarm()
 
     def toggle_doors(self) -> None:
-        """Toggle doors state."""
-        if self.car.doors_locked:
+        if self.car.locked:
             self.car.unlock_doors()
         else:
             self.car.lock_doors()
 
-    def remote_engine(self) -> None:
-        """Start or stop engine remotely."""
-        if self.car.engine_started:
+    def toggle_engine(self) -> None:
+        if self.car.engine:
             self.car.stop_engine()
         else:
             self.car.start_engine()
 
 
 class SecureRemote(RemoteControl):
-    """Protected remote control with PIN code."""
-
-    def __init__(self, car: Car, pin_code: str) -> None:
-        """Initialize a secure remote."""
-        super().__init__(car)
-        self.pin_code = pin_code
-        self.entered_pin = ""
-
-    def enter_pin(self, pin_attempt: str) -> None:
-        """Enter a PIN code."""
-        self.entered_pin = pin_attempt
+    """Защищённый пульт."""
 
     def toggle_alarm(self) -> None:
-        """Toggle alarm mode."""
-        print("Secure check completed.")
-        if self.car.alarm_enabled:
+        print("Проверка безопасности пройдена.")
+        if self.car.alarm:
             self.car.deactivate_alarm()
         else:
             self.car.activate_alarm()
 
     def toggle_doors(self) -> None:
-        """Toggle doors state."""
-        print("Protected doors control is active.")
-        if self.car.doors_locked:
+        print("Защищённое управление дверями.")
+        if self.car.locked:
             self.car.unlock_doors()
         else:
             self.car.lock_doors()
 
-    def remote_engine(self) -> None:
-        """Start or stop engine remotely after PIN validation."""
-        if self.entered_pin != self.pin_code:
-            print("Incorrect PIN code. Engine start denied.")
-            return
-
-        if self.car.engine_started:
+    def toggle_engine(self) -> None:
+        print("Защищённое управление двигателем.")
+        if self.car.engine:
             self.car.stop_engine()
         else:
             self.car.start_engine()
 
 
 def main() -> None:
-    """Demonstrate the bridge example."""
-    bmw = BMWCar("X5")
-    toyota = ToyotaCar("Camry")
-    audi = AudiCar("A6")
+    """Демонстрация работы паттерна."""
+    bmw = BMW("X5")
+    toyota = Toyota("Camry")
+    audi = Audi("A6")
 
-    remote_1 = StandardRemote(bmw)
-    remote_2 = SecureRemote(toyota, "1234")
-    remote_3 = StandardRemote(audi)
+    standard_remote = StandardRemote(bmw)
+    secure_remote = SecureRemote(toyota)
+    another_standard_remote = StandardRemote(audi)
 
-    print("=== BMW with standard remote ===")
-    remote_1.toggle_doors()
-    remote_1.toggle_alarm()
-    remote_1.remote_engine()
-    bmw.show_status()
+    print("=== BMW ===")
+    standard_remote.toggle_doors()
+    standard_remote.toggle_alarm()
+    standard_remote.toggle_engine()
 
-    print("\n=== Toyota with secure remote ===")
-    remote_2.toggle_doors()
-    remote_2.toggle_alarm()
-    remote_2.enter_pin("1234")
-    remote_2.remote_engine()
-    toyota.show_status()
+    print("\n=== Toyota ===")
+    secure_remote.toggle_doors()
+    secure_remote.toggle_alarm()
+    secure_remote.toggle_engine()
 
-    print("\n=== Audi with standard remote ===")
-    remote_3.toggle_doors()
-    remote_3.remote_engine()
-    audi.show_status()
+    print("\n=== Audi ===")
+    another_standard_remote.toggle_doors()
+    another_standard_remote.toggle_engine()
 
 
 if __name__ == "__main__":
