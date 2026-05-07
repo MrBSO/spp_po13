@@ -1,7 +1,7 @@
 ﻿from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
-from typing import List, Dict, Optional
+from typing import List, Optional
 
 
 class Grade(Enum):
