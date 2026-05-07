@@ -1,195 +1,135 @@
 """Lab 3, task 3, variant 7.
 
-Behavioral pattern example: Command.
-Pizzeria supports order creation, cancellation and repeating.
+Поведенческий паттерн: Command.
+Пиццерия поддерживает создание заказа,
+его отмену и повтор.
 """
-
-from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
 
 # pylint: disable=too-few-public-methods
 class Order:
-    """Represent an order in the pizzeria."""
+    """Сущность заказа."""
 
-    def __init__(self, order_id: int, items: list[str], total_price: float) -> None:
-        """Initialize an order."""
+    def __init__(self, order_id: int, items: list[str]) -> None:
         self.order_id = order_id
         self.items = items
-        self.total_price = total_price
-        self.status = "Created"
+        self.status = "Создан"
 
-    def describe(self) -> str:
-        """Return human-readable order description."""
+    def info(self) -> str:
+        """Вернуть описание заказа."""
         items_text = ", ".join(self.items)
-        left_part = f"Order #{self.order_id}: {items_text}"
-        right_part = f"total={self.total_price:.2f} | status={self.status}"
-        return f"{left_part} | {right_part}"
+        return f"Заказ №{self.order_id}: {items_text}, статус={self.status}"
 
 
 class Pizzeria:
-    """Represent a pizzeria."""
-
-    PRICE_LIST = {
-        "Margherita": 12.0,
-        "Pepperoni": 15.0,
-        "Four Cheeses": 17.0,
-        "Mushroom": 14.0,
-        "Cola": 3.0,
-        "Juice": 4.0,
-    }
+    """Получатель команд."""
 
     def __init__(self) -> None:
-        """Initialize pizzeria storage."""
         self.orders: dict[int, Order] = {}
-        self.next_order_id = 1
+        self.next_id = 1
 
     def create_order(self, items: list[str]) -> Order:
-        """Create a new order."""
-        total_price = 0.0
-
-        for item in items:
-            if item not in self.PRICE_LIST:
-                raise ValueError(f"Menu item '{item}' does not exist.")
-            total_price += self.PRICE_LIST[item]
-
-        order = Order(self.next_order_id, items[:], total_price)
-        self.orders[self.next_order_id] = order
-        self.next_order_id += 1
-
-        print(f"Created {order.describe()}")
+        """Создать заказ."""
+        order = Order(self.next_id, items)
+        self.orders[self.next_id] = order
+        self.next_id += 1
+        print(f"Создан {order.info()}")
         return order
 
     def cancel_order(self, order_id: int) -> None:
-        """Cancel an existing order."""
+        """Отменить заказ."""
         order = self.orders.get(order_id)
         if order is None:
-            print(f"Order #{order_id} was not found.")
+            print(f"Заказ №{order_id} не найден.")
             return
 
-        if order.status == "Cancelled":
-            print(f"Order #{order_id} has already been cancelled.")
-            return
-
-        order.status = "Cancelled"
-        print(f"Order #{order_id} cancelled.")
+        order.status = "Отменён"
+        print(f"Заказ №{order_id} отменён.")
 
     def repeat_order(self, order_id: int) -> Order | None:
-        """Repeat an existing order."""
+        """Повторить заказ."""
         old_order = self.orders.get(order_id)
         if old_order is None:
-            print(f"Order #{order_id} was not found.")
+            print(f"Заказ №{order_id} не найден.")
             return None
 
-        new_order = self.create_order(old_order.items)
-        print(f"Repeated order #{order_id} as order #{new_order.order_id}.")
-        return new_order
-
-    def show_orders(self) -> None:
-        """Show all orders."""
-        print("\nOrders list:")
-        if not self.orders:
-            print("No orders available.")
-            return
-
-        for order in self.orders.values():
-            print(order.describe())
+        return self.create_order(old_order.items)
 
 
+# pylint: disable=too-few-public-methods
 class Command(ABC):
-    """Abstract command."""
+    """Абстрактная команда."""
 
     @abstractmethod
     def execute(self):
-        """Execute a command."""
+        """Выполнить команду."""
 
 
 # pylint: disable=too-few-public-methods
 class CreateOrderCommand(Command):
-    """Command for order creation."""
+    """Команда создания заказа."""
 
     def __init__(self, pizzeria: Pizzeria, items: list[str]) -> None:
-        """Initialize the command."""
         self.pizzeria = pizzeria
         self.items = items
 
     def execute(self) -> Order:
-        """Execute the command."""
         return self.pizzeria.create_order(self.items)
 
 
 # pylint: disable=too-few-public-methods
 class CancelOrderCommand(Command):
-    """Command for order cancellation."""
+    """Команда отмены заказа."""
 
     def __init__(self, pizzeria: Pizzeria, order_id: int) -> None:
-        """Initialize the command."""
         self.pizzeria = pizzeria
         self.order_id = order_id
 
     def execute(self) -> None:
-        """Execute the command."""
         self.pizzeria.cancel_order(self.order_id)
 
 
 # pylint: disable=too-few-public-methods
 class RepeatOrderCommand(Command):
-    """Command for order repeating."""
+    """Команда повтора заказа."""
 
     def __init__(self, pizzeria: Pizzeria, order_id: int) -> None:
-        """Initialize the command."""
         self.pizzeria = pizzeria
         self.order_id = order_id
 
     def execute(self) -> Order | None:
-        """Execute the command."""
         return self.pizzeria.repeat_order(self.order_id)
 
 
 class OrderManager:
-    """Manage command execution."""
+    """Вызывающий объект."""
 
     def __init__(self) -> None:
-        """Initialize command manager."""
         self.history: list[str] = []
 
-    def run_command(self, command: Command):
-        """Execute a command and remember it."""
+    def run(self, command: Command):
+        """Запустить команду и сохранить её в историю."""
         result = command.execute()
         self.history.append(command.__class__.__name__)
         return result
 
-    def show_history(self) -> None:
-        """Show command execution history."""
-        print("\nCommand history:")
-        if not self.history:
-            print("History is empty.")
-            return
-
-        for index, command_name in enumerate(self.history, start=1):
-            print(f"{index}. {command_name}")
-
 
 def main() -> None:
-    """Demonstrate the command example."""
+    """Демонстрация работы паттерна."""
     pizzeria = Pizzeria()
     manager = OrderManager()
 
-    create_first_order = CreateOrderCommand(pizzeria, ["Pepperoni", "Cola"])
-    first_order = manager.run_command(create_first_order)
+    first_order = manager.run(CreateOrderCommand(pizzeria, ["Пепперони", "Кола"]))
+    second_order = manager.run(CreateOrderCommand(pizzeria, ["Маргарита", "Сок"]))
 
-    create_second_order = CreateOrderCommand(pizzeria, ["Margherita", "Juice"])
-    second_order = manager.run_command(create_second_order)
+    manager.run(CancelOrderCommand(pizzeria, first_order.order_id))
+    manager.run(RepeatOrderCommand(pizzeria, second_order.order_id))
 
-    cancel_first_order = CancelOrderCommand(pizzeria, first_order.order_id)
-    manager.run_command(cancel_first_order)
-
-    repeat_second_order = RepeatOrderCommand(pizzeria, second_order.order_id)
-    manager.run_command(repeat_second_order)
-
-    pizzeria.show_orders()
-    manager.show_history()
+    print("\nИстория команд:")
+    for item in manager.history:
+        print(item)
 
 
 if __name__ == "__main__":
