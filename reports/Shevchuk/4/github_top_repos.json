@@ -1,0 +1,82 @@
+[
+    {
+        "full_name": "freeCodeCamp/freeCodeCamp",
+        "description": "freeCodeCamp.org's open-source codebase and curriculum. Learn math, programming, and computer science for free.",
+        "stars": 444319,
+        "forks": 44494,
+        "last_commit_date": "2026-05-07T06:12:12Z",
+        "html_url": "https://github.com/freeCodeCamp/freeCodeCamp"
+    },
+    {
+        "full_name": "facebook/react",
+        "description": "The library for web and native user interfaces.",
+        "stars": 244874,
+        "forks": 51007,
+        "last_commit_date": "2026-05-07T17:48:57Z",
+        "html_url": "https://github.com/facebook/react"
+    },
+    {
+        "full_name": "vercel/next.js",
+        "description": "The React Framework",
+        "stars": 139315,
+        "forks": 31036,
+        "last_commit_date": "2026-05-07T22:06:28Z",
+        "html_url": "https://github.com/vercel/next.js"
+    },
+    {
+        "full_name": "facebook/react-native",
+        "description": "A framework for building native applications using React",
+        "stars": 125753,
+        "forks": 25145,
+        "last_commit_date": "2026-05-07T21:17:33Z",
+        "html_url": "https://github.com/facebook/react-native"
+    },
+    {
+        "full_name": "justjavac/free-programming-books-zh_CN",
+        "description": ":books: 免费的计算机编程类中文书籍，欢迎投稿",
+        "stars": 116846,
+        "forks": 28305,
+        "last_commit_date": "2024-01-22T00:24:11Z",
+        "html_url": "https://github.com/justjavac/free-programming-books-zh_CN"
+    },
+    {
+        "full_name": "shadcn-ui/ui",
+        "description": "A set of beautifully-designed, accessible components and a code distribution platform. Works with your favorite frameworks. Open Source. Open Code.",
+        "stars": 113755,
+        "forks": 8746,
+        "last_commit_date": "2026-05-07T06:27:07Z",
+        "html_url": "https://github.com/shadcn-ui/ui"
+    },
+    {
+        "full_name": "facebook/create-react-app",
+        "description": "Set up a modern web app by running one command.",
+        "stars": 103391,
+        "forks": 27066,
+        "last_commit_date": "2025-02-15T01:18:18Z",
+        "html_url": "https://github.com/facebook/create-react-app"
+    },
+    {
+        "full_name": "mui/material-ui",
+        "description": "Material UI: Comprehensive React component library that implements Google's Material Design. Free forever.",
+        "stars": 98285,
+        "forks": 32644,
+        "last_commit_date": "2026-05-07T15:29:38Z",
+        "html_url": "https://github.com/mui/material-ui"
+    },
+    {
+        "full_name": "ant-design/ant-design",
+        "description": "An enterprise-class UI design language and React UI library",
+        "stars": 97947,
+        "forks": 54607,
+        "last_commit_date": "2026-05-07T14:35:36Z",
+        "html_url": "https://github.com/ant-design/ant-design"
+    },
+    {
+        "full_name": "storybookjs/storybook",
+        "description": "Storybook is the industry standard workshop for building, documenting, and testing UI components in isolation",
+        "stars": 89867,
+        "forks": 10043,
+        "last_commit_date": "2026-05-07T16:39:05Z",
+        "html_url": "https://github.com/storybookjs/storybook"
+    }
+]
